@@ -1,5 +1,6 @@
 # Spectr_App
 
-Установка неоходимых пакетов
+Инструкции по запуску
 
-`pip install -r requirements.txt`
+* flask-сервера - в папке `api-server-flask`
+* фронтэнда на react.js - в `frontend`
