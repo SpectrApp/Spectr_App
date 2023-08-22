@@ -6,7 +6,6 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Post, Message, Comment
 from datetime import datetime
 import os
-from app.simulator import simulate
 import pandas as pd
 
 
@@ -203,20 +202,6 @@ def unfollow(username):
         return redirect(url_for('user', username=username))
     else:
         return redirect(url_for('index'))
-
-@app.route('/simulator', methods=['POST', 'GET'])
-@login_required
-def simulator():
-    form = PostForm()
-    if form.validate_on_submit():
-        data = form.post.data
-        values = list(map(float, data.split()))
-        full_filename1 = os.path.join(app.config['UPLOAD_FOLDER'], 'angles.jpg')
-        full_filename2 = os.path.join(app.config['UPLOAD_FOLDER'], 'velocities.jpg')
-        simulate(values[0], values[1], values[2], values[3], 'app/' + full_filename1, 'app/' + full_filename2)
-        return render_template('simulator.html', title='Simulator', form = form, user_image1 = full_filename1, user_image2 = full_filename2)
-    else:
-        return render_template('simulator.html', title='Simulator', form = form)
 
 @app.route('/dashboard', methods=['POST', 'GET'])
 @login_required
