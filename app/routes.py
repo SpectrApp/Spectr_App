@@ -1,8 +1,10 @@
 from flask import render_template, flash, redirect, url_for, request, current_app
 from app import app, db
 from app.forms import (LoginForm, RegistrationForm, EditProfileForm, EmptyForm,
-                       PostForm, MessageForm, ReplyForm, DeleteProfileForm, HelpForm)
+                       PostForm, MessageForm, ReplyForm, DeleteProfileForm, HelpForm, FileForm)
 from flask_login import current_user, login_user, logout_user, login_required
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+from werkzeug.utils import secure_filename
 from app.models import User, Post, Message, Comment
 from datetime import datetime
 import os
@@ -11,6 +13,7 @@ import pandas as pd
 
 IMG_FOLDER = os.path.join('static', 'IMG')
 app.config['UPLOAD_FOLDER'] = IMG_FOLDER
+app.config['DATA_PATH'] = os.path.join('app', 'static', 'data', 'biostats.csv')
 
 @app.before_request
 def before_request():
@@ -205,8 +208,25 @@ def unfollow(username):
 
 @app.route('/dashboard', methods=['POST', 'GET'])
 @login_required
-def dashboard():
+def dashboard(path = app.config['DATA_PATH']):
     #load sample table
-    path = os.path.abspath(os.path.join('app', 'static', 'data', 'biostats.csv'))
+    path = os.path.abspath(path)
     x = pd.read_csv(path)
     return render_template('dashboard.html', name='biostat', data=x.to_html(table_id='datatablesSimple'))
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    form = FileForm()
+
+    if form.validate_on_submit():
+        f = form.file.data
+        filename = secure_filename(f.filename)
+        filepath = os.path.join(
+            app.instance_path, filename
+        )
+        f.save(filepath)
+        #filepath = os.path.abspath(os.path.join('app', 'static', 'data', 'biostats.csv'))
+        x = pd.read_csv(filepath)
+        return render_template('dashboard.html', name=filename, data=x.to_html(table_id='datatablesSimple'))
+
+    return render_template('tables.html', title='Tables',  form=form)
