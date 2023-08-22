@@ -221,5 +221,7 @@ def simulator():
 @app.route('/dashboard', methods=['POST', 'GET'])
 @login_required
 def dashboard():
-    x = pd.read_csv('/home/dmitry/repos/Spectr_App/app/static/data/biostats.csv')
+    #load sample table
+    path = os.path.abspath(os.path.join('app', 'static', 'data', 'biostats.csv'))
+    x = pd.read_csv(path)
     return render_template('dashboard.html', name='biostat', data=x.to_html(table_id='datatablesSimple'))
