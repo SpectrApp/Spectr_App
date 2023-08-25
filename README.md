@@ -72,6 +72,20 @@ $ (Powershell) $env:FLASK_APP = ".\main.py"
 $ (Powershell) $env:FLASK_ENV = "development"
 ```
 
+**ВАЖНО!**
+Сайт испольует API сервиса [dadata](https://dadata.ru/api/clean/address/#response).
+Для его работы нужно установить environment variables:
+* DADATA_API_KEY - api-ключ (токен)
+* DADATA_SECRET_KEY - секретный ключ
+Это делается теми же командами:
+
+на Linux:
+```bash
+$ export DADATA_API_KEY=ваш_токен
+$ export DADATA_SECRET_KEY=ваш_секретный_ключ
+```
+на Windows аналогично, см. команды выше.
+
 <br />
 
 > **Step #6** - start server at `localhost:5000`
