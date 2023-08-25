@@ -1,7 +1,8 @@
 from flask import render_template, flash, redirect, url_for, request, current_app
 from app import app, db
 from app.forms import (LoginForm, RegistrationForm, EditProfileForm, EmptyForm,
-                       PostForm, MessageForm, ReplyForm, DeleteProfileForm, HelpForm, FileForm)
+                       PostForm, MessageForm, ReplyForm, DeleteProfileForm, HelpForm,
+                       RealEstateForm, FileForm)
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from werkzeug.utils import secure_filename
@@ -9,6 +10,7 @@ from app.models import User, Post, Message, Comment
 from datetime import datetime
 import os
 import pandas as pd
+from .utils import get_info_by_address
 
 
 IMG_FOLDER = os.path.join('static', 'IMG')
@@ -229,6 +231,7 @@ def dashboard():
 
 
 @app.route('/upload', methods=['GET', 'POST'])
+@login_required
 def upload():
     form = FileForm()
 
@@ -250,3 +253,17 @@ def upload():
         # return render_template('dashboard.html', name=filename, data=x.to_html(table_id='datatablesSimple'))
 
     return render_template('tables.html', title='Tables',  form=form)
+
+
+@app.route('/survey', methods=['POST', 'GET'])
+@login_required
+def survey():
+    print('im here')
+    form = RealEstateForm()
+    if form.is_submitted():
+        address_data = get_info_by_address(form.address.data)
+        if (address_data is None):
+            flash('Invalid address!')
+        else:
+            return render_template('survey.html', form=form, address_data=pd.DataFrame(address_data.items()).to_html(table_id='datatablesSimple'))
+    return render_template('survey.html', form=form)

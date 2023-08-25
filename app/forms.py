@@ -63,3 +63,7 @@ class MessageForm(FlaskForm):
 class FileForm(FlaskForm):
     file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'csv tables only!')])
     submit = SubmitField('Submit')
+
+class RealEstateForm(FlaskForm):
+    address = StringField("Address", render_kw={"id":"address"})
+    submit = SubmitField('Submit')
