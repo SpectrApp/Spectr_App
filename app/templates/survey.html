@@ -36,7 +36,11 @@
       Data by address
     </div>
     <div class="card-body">
+      {% if  address_data %}
       {{address_data | safe}}
+      {% else %}
+      Data is missing or invalid :(
+      {% endif %}
     </div>
   </div>
 </div>
