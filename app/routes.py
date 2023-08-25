@@ -15,6 +15,7 @@ IMG_FOLDER = os.path.join('static', 'IMG')
 app.config['UPLOAD_FOLDER'] = IMG_FOLDER
 app.config['DATA_PATH'] = os.path.join('app', 'static', 'data', 'biostats.csv')
 
+
 @app.before_request
 def before_request():
     if current_user.is_authenticated:
@@ -37,12 +38,14 @@ def index():
     return render_template("index.html", title='Home Page', form=form,
                            posts=posts)
 
+
 @app.route('/help')
 def help():
     form = HelpForm()
     with open('app/help.txt') as f:
         help_message = f.readlines()
-    return render_template("help.html", title='Help', form=form, help_message = help_message)
+    return render_template("help.html", title='Help', form=form, help_message=help_message)
+
 
 @app.route('/user/<username>')
 @login_required
@@ -143,14 +146,14 @@ def login():
             flash('Invalid username or password')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('index'))
+        return redirect(url_for('dashboard'))
     return render_template('login.html', title='Sign In', form=form)
 
 
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('dashboard'))
 
 
 @app.route('/follow/<username>', methods=['POST'])
@@ -206,13 +209,24 @@ def unfollow(username):
     else:
         return redirect(url_for('index'))
 
+
+DATASET_PATH = None
+DATASET_NAME = "example"
+
+
 @app.route('/dashboard', methods=['POST', 'GET'])
 @login_required
-def dashboard(path = app.config['DATA_PATH']):
-    #load sample table
-    path = os.path.abspath(path)
+def dashboard():
+    global DATASET_PATH
+    global DATASET_NAME
+    # load sample tableDATASET_PATH
+    print(DATASET_PATH)
+    path = DATASET_PATH
+    if DATASET_PATH is None:
+        path = os.path.abspath(app.config['DATA_PATH'])
     x = pd.read_csv(path)
-    return render_template('dashboard.html', name='biostat', data=x.to_html(table_id='datatablesSimple'))
+    return render_template('dashboard.html', name=DATASET_NAME, data=x.to_html(table_id='datatablesSimple'))
+
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
@@ -225,8 +239,14 @@ def upload():
             app.instance_path, filename
         )
         f.save(filepath)
-        #filepath = os.path.abspath(os.path.join('app', 'static', 'data', 'biostats.csv'))
-        x = pd.read_csv(filepath)
-        return render_template('dashboard.html', name=filename, data=x.to_html(table_id='datatablesSimple'))
+        # filepath = os.path.abspath(os.path.join('app', 'static', 'data', 'biostats.csv'))
+        # x = pd.read_csv(filepath)
+        print(filepath)
+        global DATASET_PATH
+        global DATASET_NAME
+        DATASET_PATH = filepath
+        DATASET_NAME = filename
+        return redirect(url_for('dashboard'))
+        # return render_template('dashboard.html', name=filename, data=x.to_html(table_id='datatablesSimple'))
 
     return render_template('tables.html', title='Tables',  form=form)
