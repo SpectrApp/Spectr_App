@@ -8,12 +8,7 @@
 
 > **Step #1** - Clone the project
 
-**Актуальная версия:** 
-```bash
-$ git clone -b feature-upload-files https://github.com/SpectrApp/Spectr_App.git
-```
 
-~~Из ветки main:~~
 ```bash
 $ git clone  https://github.com/SpectrApp/Spectr_App.git
 ``` 
