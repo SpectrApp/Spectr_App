@@ -25,7 +25,6 @@ def before_request():
         db.session.commit()
 
 
-@app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
@@ -216,6 +215,7 @@ DATASET_PATH = None
 DATASET_NAME = "example"
 
 
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/dashboard', methods=['POST', 'GET'])
 @login_required
 def dashboard():
