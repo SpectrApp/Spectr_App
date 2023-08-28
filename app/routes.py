@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for, request, current_ap
 from app import app, db
 from app.forms import (LoginForm, RegistrationForm, EditProfileForm, EmptyForm,
                        PostForm, MessageForm, ReplyForm, DeleteProfileForm, HelpForm,
-                       RealEstateForm, FileForm)
+                       AddressForm, FileForm, RealEstateForm)
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_wtf.file import FileField, FileRequired, FileAllowed
 from werkzeug.utils import secure_filename
@@ -244,7 +244,7 @@ def upload():
         f.save(filepath)
         # filepath = os.path.abspath(os.path.join('app', 'static', 'data', 'biostats.csv'))
         # x = pd.read_csv(filepath)
-        print(filepath)
+        # print(filepath)
         global DATASET_PATH
         global DATASET_NAME
         DATASET_PATH = filepath
@@ -258,12 +258,22 @@ def upload():
 @app.route('/survey', methods=['POST', 'GET'])
 @login_required
 def survey():
-    print('im here')
-    form = RealEstateForm()
+    form = AddressForm()
+    realty_form = RealEstateForm()
     if form.is_submitted():
         address_data = get_info_by_address(form.address.data)
         if (address_data is None):
             flash('Invalid address!')
         else:
-            return render_template('survey.html', form=form, address_data=pd.DataFrame(address_data.items()).to_html(table_id='datatablesSimple'))
-    return render_template('survey.html', form=form)
+            if address_data['city'] is not None:
+                realty_form.city.data = address_data['city']
+            if address_data['city'] is None and address_data['region'] in ['Москва', 'Санкт-Петербург']:
+                realty_form.city.data = address_data['region']
+            if address_data['city_district'] is not None:
+                realty_form.city_district.data = address_data['city_district']
+            if address_data['street'] is not None:
+                realty_form.street.data = address_data['street']
+            if address_data['flat_area'] is not None:
+                realty_form.area_total.data = address_data['flat_area']
+            return render_template('survey.html', address_form=form, realty_form=realty_form, address_data=pd.DataFrame(address_data.items()).to_html(table_id='datatablesSimple'))
+    return render_template('survey.html', address_form=form, realty_form=realty_form)

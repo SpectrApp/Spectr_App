@@ -64,6 +64,20 @@ class FileForm(FlaskForm):
     file = FileField(validators=[FileRequired(), FileAllowed(['csv'], 'csv tables only!')])
     submit = SubmitField('Submit')
 
-class RealEstateForm(FlaskForm):
+class AddressForm(FlaskForm):
     address = StringField("Address", render_kw={"id":"address"})
     submit = SubmitField('Submit')
+
+class RealEstateForm(FlaskForm):
+    city = StringField("Город", render_kw={"class":"form-control", "id": "inputCity", "type":"text", "placeholder":"Город"})
+    city_district = StringField("Район", render_kw={"class":"form-control", "id": "inputDistrict", "type":"text", "placeholder":"Район"})
+    metro = StringField("Метро", render_kw={"class":"form-control", "id": "inputMetro", "type":"text", "placeholder":"Метро"})
+    street = StringField("Улица", render_kw={"class":"form-control", "id": "inputStreet", "type":"text", "placeholder":"Улица"})
+    year = StringField("Год постройки", render_kw={"class":"form-control", "id": "inputYear", "type":"text", "placeholder":"Год постройки"})
+    floor = StringField("Этаж", render_kw={"class":"form-control", "id": "inputFloor", "type":"text", "placeholder":"Этаж"})
+    floors_total = StringField("Этажей в доме", render_kw={"class":"form-control", "id": "inputFloorsTotal", "type":"text", "placeholder":"Этажей в доме"})
+    area_total = StringField("Общая площадь", render_kw={"class":"form-control", "id": "inputAreaTotal", "type":"text", "placeholder":"Общая площадь"})
+    area_living = StringField("Жилая площадь", render_kw={"class":"form-control", "id": "inputAreaLiving", "type":"text", "placeholder":"Жилая площадь"})
+    area_kitchen = StringField("Площадь кухни", render_kw={"class":"form-control", "id": "inputAreaKitchen", "type":"text", "placeholder":"Площадь кухни"})
+    rooms = StringField("Количество комнат", render_kw={"class":"form-control", "id": "inputRooms", "type":"text", "placeholder":"Количество комнат"})
+    
