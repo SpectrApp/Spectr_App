@@ -78,7 +78,7 @@ def dashboard(realty_data=None):
             path = os.path.abspath(app.config['DATA_PATH'])
         x = pd.read_csv(path)
         return render_template('dashboard.html', name=DATASET_NAME, data=x.to_html(table_id='datatablesSimple'))
-    return render_template('dashboard.html', price=str(realty_data) + " ₽   ")
+    return render_template('dashboard.html', price=f'{int(realty_data):,}' + " ₽   ")
 
 
 @app.route('/upload', methods=['GET', 'POST'])

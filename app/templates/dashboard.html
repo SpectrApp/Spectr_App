@@ -12,8 +12,7 @@
       Стоимость квартиры
     </div>
     <div class="card-body">
-
-      {{price | safe}}
+      <h1>{{price | safe}}</h1>
     </div>
   </div>
   <style>
@@ -34,7 +33,7 @@
     }
   </style>
   <!--<div class="card mb-4">-->
-    <img class="center fit" src="{{ url_for('static', filename='pictures/correlation_heatmap.jpg') }}">
+    <img class="center fit" src="{{ url_for('static', filename='pictures/correlation_heatmap.png') }}">
     <img class="center fit" src="{{ url_for('static', filename='pictures/histogram_totalm2.jpg') }}">
     <img class="center fit" src="{{ url_for('static', filename='pictures/histograms_districts.jpg') }}">
   <!--</div>-->
