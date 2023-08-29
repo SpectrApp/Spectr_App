@@ -25,6 +25,7 @@
         <!--<div class="form_holder">-->
         <div class="card-body">
           <form id="msform" method="post">
+            {{ realty_form.csrf_token }}
             <ul id="progressbar">
               <li class="active">1. Адрес</li>
               <li>2. Основная информация</li>
@@ -105,6 +106,14 @@
               <div class="form-floating mb-3">
                 {{ realty_form.area_kitchen() }}
                 <label for="inputAreaKitchen">Площадь кухни</label>
+              </div>
+              <div class="form-floating mb-3">
+                {{ realty_form.rooms() }}
+                <label for="inputRooms">Количество комнат</label>
+              </div>
+              <div class="form-floating mb-3">
+                {{ realty_form.price_per_m2() }}
+                <label for="inputPrice">Стоимость м2 при покупке</label>
               </div>
               <input type="button" name="previous" class="previous action-button" value="Назад" />
               <input type="button" name="next" class="next action-button" value="Далее" />

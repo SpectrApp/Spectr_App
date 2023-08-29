@@ -10,7 +10,7 @@ from app.models import User, Post, Message, Comment
 from datetime import datetime
 import os
 import pandas as pd
-from .utils import get_info_by_address
+from .utils import parse_realty_form, get_price_prediction
 
 
 app.config['DATA_PATH'] = os.path.join('app', 'static', 'data', 'biostats.csv')
@@ -42,7 +42,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
     form = LoginForm()
-    if form.is_submitted():
+    if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
@@ -63,19 +63,22 @@ DATASET_NAME = "example"
 
 
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/index', methods=['GET', 'POST'])
-@app.route('/dashboard', methods=['POST', 'GET'])
+@app.route('/<realty_data>', methods=['GET', 'POST'])
+@app.route('/dashboard/', methods=['POST', 'GET'])
+@app.route('/dashboard/<realty_data>', methods=['POST', 'GET'])
 @login_required
-def dashboard():
-    global DATASET_PATH
-    global DATASET_NAME
-    # load sample tableDATASET_PATH
-    print(DATASET_PATH)
-    path = DATASET_PATH
-    if DATASET_PATH is None:
-        path = os.path.abspath(app.config['DATA_PATH'])
-    x = pd.read_csv(path)
-    return render_template('dashboard.html', name=DATASET_NAME, data=x.to_html(table_id='datatablesSimple'))
+def dashboard(realty_data=None):
+    if realty_data is None:
+        global DATASET_PATH
+        global DATASET_NAME
+        # load sample tableDATASET_PATH
+        # print(DATASET_PATH)
+        path = DATASET_PATH
+        if DATASET_PATH is None:
+            path = os.path.abspath(app.config['DATA_PATH'])
+        x = pd.read_csv(path)
+        return render_template('dashboard.html', name=DATASET_NAME, data=x.to_html(table_id='datatablesSimple'))
+    return render_template('dashboard.html', price=str(realty_data) + " ₽")
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -108,27 +111,9 @@ def upload():
 def survey():
     form = AddressForm()
     realty_form = RealEstateForm()
-    ''' 
-    if form.is_submitted():
-        address_data = get_info_by_address(form.address.data)
-        if (address_data is None):
-            flash('Invalid address!')
-        else:
-            print("set")
-            if address_data['city'] is not None:
-                realty_form.city.data = address_data['city']
-            if address_data['city'] is None and address_data['region'] in ['Москва', 'Санкт-Петербург']:
-                realty_form.city.data = address_data['region']
-            if address_data['city_district'] is not None:
-                realty_form.city_district.data = address_data['city_district']
-            if address_data['street'] is not None:
-                realty_form.street.data = address_data['street']
-            if address_data['flat_area'] is not None:
-                realty_form.area_total.data = address_data['flat_area']
-            # address_data=pd.DataFrame(address_data.items()).to_html(table_id='datatablesSimple')
-            return render_template('survey.html', address_form=form, realty_form=realty_form)
-    '''
-    if realty_form.is_submitted():
-        return redirect(url_for('dashboard'))
+    if realty_form.validate_on_submit():
+        data = parse_realty_form(realty_form)
+        data = get_price_prediction(data)
+        return redirect(url_for('dashboard', realty_data=data))
     else:
         return render_template('survey.html', address_form=form, realty_form=realty_form)
