@@ -65,11 +65,12 @@ class FileForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class AddressForm(FlaskForm):
-    address = StringField("Address", render_kw={"id":"address"})
-    submit = SubmitField('Submit')
+    address = StringField("Address", render_kw={"class":"form-control", "id": "address", "type":"text", "placeholder":"Адрес"})
+    submit = SubmitField(render_kw={ })
 
 class RealEstateForm(FlaskForm):
-    city = StringField("Город", render_kw={"class":"form-control", "id": "inputCity", "type":"text", "placeholder":"Город"})
+    address = StringField("Address", render_kw={"class":"form-control", "id": "address", "type":"text", "placeholder":"Адрес"})
+    city = StringField("Город", validators=[DataRequired()], render_kw={"class":"form-control", "id": "inputCity", "type":"text", "placeholder":"Город"})
     city_district = StringField("Район", render_kw={"class":"form-control", "id": "inputDistrict", "type":"text", "placeholder":"Район"})
     metro = StringField("Метро", render_kw={"class":"form-control", "id": "inputMetro", "type":"text", "placeholder":"Метро"})
     street = StringField("Улица", render_kw={"class":"form-control", "id": "inputStreet", "type":"text", "placeholder":"Улица"})
@@ -80,4 +81,5 @@ class RealEstateForm(FlaskForm):
     area_living = StringField("Жилая площадь", render_kw={"class":"form-control", "id": "inputAreaLiving", "type":"text", "placeholder":"Жилая площадь"})
     area_kitchen = StringField("Площадь кухни", render_kw={"class":"form-control", "id": "inputAreaKitchen", "type":"text", "placeholder":"Площадь кухни"})
     rooms = StringField("Количество комнат", render_kw={"class":"form-control", "id": "inputRooms", "type":"text", "placeholder":"Количество комнат"})
+    submit = SubmitField("Отправить", render_kw={"type":"submit", "class":"submit action-button"}) 
     

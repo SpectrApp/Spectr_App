@@ -13,8 +13,6 @@ import pandas as pd
 from .utils import get_info_by_address
 
 
-IMG_FOLDER = os.path.join('static', 'IMG')
-app.config['UPLOAD_FOLDER'] = IMG_FOLDER
 app.config['DATA_PATH'] = os.path.join('app', 'static', 'data', 'biostats.csv')
 
 
@@ -139,7 +137,7 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('dashboard'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -260,11 +258,13 @@ def upload():
 def survey():
     form = AddressForm()
     realty_form = RealEstateForm()
+    ''' 
     if form.is_submitted():
         address_data = get_info_by_address(form.address.data)
         if (address_data is None):
             flash('Invalid address!')
         else:
+            print("set")
             if address_data['city'] is not None:
                 realty_form.city.data = address_data['city']
             if address_data['city'] is None and address_data['region'] in ['Москва', 'Санкт-Петербург']:
@@ -275,5 +275,10 @@ def survey():
                 realty_form.street.data = address_data['street']
             if address_data['flat_area'] is not None:
                 realty_form.area_total.data = address_data['flat_area']
-            return render_template('survey.html', address_form=form, realty_form=realty_form, address_data=pd.DataFrame(address_data.items()).to_html(table_id='datatablesSimple'))
-    return render_template('survey.html', address_form=form, realty_form=realty_form)
+            # address_data=pd.DataFrame(address_data.items()).to_html(table_id='datatablesSimple')
+            return render_template('survey.html', address_form=form, realty_form=realty_form)
+    '''
+    if realty_form.is_submitted():
+        return redirect(url_for('dashboard'))
+    else:
+        return render_template('survey.html', address_form=form, realty_form=realty_form)

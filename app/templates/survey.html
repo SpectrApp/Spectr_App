@@ -2,44 +2,64 @@
 
 {% block content %}
 <div class="container-fluid px-4">
-  <h1 class="mt-4">Survey</h1>
+  <h1 class="mt-4">Форма расчёта стоимости недвижимости</h1>
   <ol class="breadcrumb mb-4">
     <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
     <li class="breadcrumb-item active">Survey</li>
   </ol>
-  <div class="card mb-4">
-    <div class="card-header">
-      <i class="fas fa-table me-1"></i>
-      Your address
-    </div>
-    {{ wtf.quick_form(address_form) }}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/suggestions-jquery@21.12.0/dist/css/suggestions.min.css"
-      rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/suggestions-jquery@21.12.0/dist/js/jquery.suggestions.min.js"></script>
 
-    <script>
-      $("#address").suggestions({
-        token: "d61f4014a0ee44720df64e60a6294155e905116c",
-        type: "ADDRESS",
-        /* Вызывается, когда пользователь выбирает одну из подсказок */
-        onSelect: function (suggestion) {
-          console.log(suggestion);
-        }
-      });
-    </script>
 
-  </div>
+  <!-- MultiStep Form -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <link href="{{ url_for('static', filename='css/realty.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='css/realtyimg.css') }}" rel="stylesheet" />
+  <script src="{{ url_for('static', filename='js/realty.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/realtyimg.js') }}"></script>
 
+  <!-- /.MultiStep Form -->
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col-lg-7">
-        <div class="card shadow-sm border-0 rounded-lg mt-5">
-          <div class="card-header">
-            <h4 class="text-center font-weight-light my-4"> Заполните данные о квартире</h4>
-          </div>
-          <div class="card-body">
-            <form>
+      <div class="col-lg-10">
+        <!--<div class="form_holder">-->
+        <div class="card-body">
+          <form id="msform" method="post">
+            <ul id="progressbar">
+              <li class="active">1. Адрес</li>
+              <li>2. Основная информация</li>
+              <li>3. Фотографии</li>
+            </ul>
+            <fieldset>
+              <h2 class="fs-title">Адрес</h2>
+              <h3 class="fs-subtitle">Введите адрес</h3>
+              <div class="form-floating mb-3">
+                {{ realty_form.address() }}
+                <!--<input type="text" id="address" class="form-control">-->
+              </div>
+
+              <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+              <link href="https://cdn.jsdelivr.net/npm/suggestions-jquery@21.12.0/dist/css/suggestions.min.css"
+                rel="stylesheet" />
+              <script
+                src="https://cdn.jsdelivr.net/npm/suggestions-jquery@21.12.0/dist/js/jquery.suggestions.min.js"></script>
+
+              <script>
+                $("#address").suggestions({
+                  token: "d61f4014a0ee44720df64e60a6294155e905116c",
+                  type: "ADDRESS",
+                  /* Вызывается, когда пользователь выбирает одну из подсказок */
+                  onSelect: function (suggestion) {
+                    console.log(suggestion);
+                  }
+                });
+              </script>
+              <input type="button" name="next" class="next action-button" value="Далее"/>
+              
+            </fieldset>
+            <fieldset>
+              <h2 class="fs-title">Основная информация</h2>
+              <h3 class="fs-subtitle">Заполните данные о квартире</h3>
               <div class="form-floating mb-3">
                 {{ realty_form.city() }}
                 <label for="inputCity">Город</label>
@@ -74,29 +94,52 @@
                   </div>
                 </div>
               </div>
-              <div class="mt-4 mb-0">
-                <div class="d-grid"><a class="btn btn-primary btn-block" href="{{ url_for('survey') }}">Рассчитать!</a></div>
+              <div class="form-floating mb-3">
+                {{ realty_form.area_total() }}
+                <label for="inputAreaTotal">Общая площадь квартиры</label>
               </div>
+              <div class="form-floating mb-3">
+                {{ realty_form.area_living() }}
+                <label for="inputAreaLiving">Жилая площадь</label>
+              </div>
+              <div class="form-floating mb-3">
+                {{ realty_form.area_kitchen() }}
+                <label for="inputAreaKitchen">Площадь кухни</label>
+              </div>
+              <input type="button" name="previous" class="previous action-button" value="Назад" />
+              <input type="button" name="next" class="next action-button" value="Далее" />
+            </fieldset>
+            <fieldset>
+              <h2 class="fs-title">Personal Details</h2>
+              <h3 class="fs-subtitle">We will never sell it</h3>
+              <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+              <div class="file-upload">
+                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add
+                  Image</button>
 
-
-            </form>
-          </div>
-
+                <div class="image-upload-wrap">
+                  <input name="file-upload-input" class="file-upload-input" type='file' onchange="readURL(this);"
+                    accept="image/*" />
+                  <div class="drag-text">
+                    <h3>Drag and drop a file or select add Image</h3>
+                  </div>
+                </div>
+                <div class="file-upload-content">
+                  <img class="file-upload-image" src="#" alt="your image" />
+                  <div class="image-title-wrap">
+                    <button type="button" onclick="removeUpload()" class="remove-image">Remove <span
+                        class="image-title">Uploaded Image</span></button>
+                  </div>
+                </div>
+              </div>
+              <input type="button" name="previous" class="previous action-button" value="Назад" />
+              {{ realty_form.submit() }}
+              <!--{{ wtf.form_field(realty_form.submit) }}-->
+            </fieldset>
+          </form>
+          <!--</div>-->
         </div>
       </div>
-    </div>
-  </div>
-  <div class="card mb-4">
-    <div class="card-header">
-      <i class="fas fa-table me-1"></i>
-      Data by address
-    </div>
-    <div class="card-body">
-      {% if address_data %}
-      {{address_data | safe}}
-      {% else %}
-      Data is missing or invalid :(
-      {% endif %}
     </div>
   </div>
 </div>
