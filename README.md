@@ -1,21 +1,23 @@
 # Spectr_App
 
-## Инструкции по запуску
+## ✨ Инструкции по запуску
 
-Страница для аналитика - Simulator на верхней панели
+Чтобы запустить сайт, нужно выполнить следующие шаги:
 
-## ✨ How to use the code
+### **Шаг #1** - Клонировать проект
 
-> **Step #1** - Clone the project
-
-
+Из гитхаба
 ```bash
 $ git clone  https://github.com/SpectrApp/Spectr_App.git
+``` 
+Из гитлаба
+```bash
+$ git clone  https://gitlab.fintechhub.ru/dm1trykrylov/Spectr_App.git
 ``` 
 
 <br />
 
-> **Step #2** - create virtual environment using python3 and activate it (keep it outside our project directory)
+### **Шаг #2** - Активировать виртуальное окружение для установки библиотек
 
 ```bash
 $ # Virtualenv modules installation (Unix based systems)
@@ -33,7 +35,7 @@ $ venv\Scripts\activate.bat
 
 <br />
 
-> **Step #3** - Install dependencies in virtualenv
+### **Шаг #3** - Установить зависимости
 
 ```bash
 $ pip install -r requirements.txt
@@ -41,23 +43,27 @@ $ pip install -r requirements.txt
 
 <br />
 
-> **Step #4** - Create and setup database
+### **Шаг #4** -  Создать и настроить локальную базу данных
 
 ```bash
 $ flask db upgrade
 ```
+Папка instance нужна для сохранения временных файлов
+```bash
+$ mkdir instance
+```
+
 
 <br />
 
-
-> **Step #4** - setup `flask` command for our app
+### **Шаг #5** - Настройка команды `flask`
 
 ```bash
 $ export FLASK_APP=main.py
 $ export FLASK_ENV=development
 ```
 
- For **Windows-based** systems
+ Для **Windows-based** систем
 
 ```powershell
 $ (Windows CMD) set FLASK_APP=main.py
@@ -67,23 +73,7 @@ $ (Powershell) $env:FLASK_APP = ".\main.py"
 $ (Powershell) $env:FLASK_ENV = "development"
 ```
 
-**ВАЖНО!**
-Сайт испольует API сервиса [dadata](https://dadata.ru/api/clean/address/#response).
-Для его работы нужно установить environment variables:
-* DADATA_API_KEY - api-ключ (токен)
-* DADATA_SECRET_KEY - секретный ключ
-Это делается теми же командами:
-
-на Linux:
-```bash
-$ export DADATA_API_KEY=ваш_токен
-$ export DADATA_SECRET_KEY=ваш_секретный_ключ
-```
-на Windows аналогично, см. команды выше.
-
-<br />
-
-> **Step #6** - start server at `localhost:5000`
+### **Шаг #6** - Запуск сервера по адресу `localhost:5000`
 
 ```bash
 $ flask run
