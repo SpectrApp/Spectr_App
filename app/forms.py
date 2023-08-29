@@ -5,11 +5,10 @@ from flask_wtf.file import FileField, FileRequired, FileAllowed
 from app.models import User, Comment
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()], render_kw={'class':'form-floating mb-3'})
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Login', render_kw={ "class":'btn btn-success'})
-
+    username = StringField('Username', validators=[DataRequired()], render_kw={"class":"form-control", "id": "inputUsername", "type":"text", "placeholder":"name"})
+    password = PasswordField('Password', validators=[DataRequired()], render_kw={"class":"form-control", "id": "inputPassword", "type":"password", "placeholder":"password"})
+    remember_me = BooleanField('Запомнить пароль', render_kw={"class":"form-check-input", "id":"inputRememberPassword", "type":"checkbox"})
+    submit = SubmitField("Войти", render_kw={"type":"submit", "class":"btn btn-primary"})
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
