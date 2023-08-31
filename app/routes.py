@@ -63,7 +63,6 @@ DATASET_NAME = "example"
 
 
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/<realty_data>', methods=['GET', 'POST'])
 @app.route('/dashboard/', methods=['POST', 'GET'])
 @app.route('/dashboard/<realty_data>', methods=['POST', 'GET'])
 @login_required
